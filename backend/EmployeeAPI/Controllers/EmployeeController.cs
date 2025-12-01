@@ -50,18 +50,18 @@ namespace EmployeeAPI.Controllers
         public IActionResult AddEmployee(Employee emp)
         {
             var newEmp = _service.Add(emp);
-            if (newEmp == null)
-                return BadRequest();
-            return Ok(emp);
+            if (!newEmp.success)
+                return BadRequest(newEmp);
+            return Ok(newEmp);
         }
 
         [HttpDelete]
         public IActionResult RemoveEmployee(Guid Id)
         {
             var result = _service.Remove(Id);
-            if (!result)
-                return NotFound();
-            return Ok();
+            if (result.success == false)
+                return NotFound(result);
+            return Ok(result);
         }
 
         [HttpPut]

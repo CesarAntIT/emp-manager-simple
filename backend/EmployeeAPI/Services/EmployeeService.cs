@@ -53,16 +53,16 @@ public class EmployeeService:IEmployeeService
         _context.Employees.Add(emp);
         _context.SaveChanges();
 
-        return emp;
+        return new OpResult<Employee>(true, emp, $"The employee '{emp.FirstName} {emp.LastName}' was successfully added");
     }
     public OpResult<Employee> Remove(Guid ID)
     {
         var emp = GetById(ID);
         if (emp == null)
-            return false;
+            return new OpResult<Employee>(false, null!, "Could not find employee set for removal");
         _context.Employees.Remove(emp);
         _context.SaveChanges();
-        return true;
+        return new OpResult<Employee>(true, emp, $"The employee '{emp.FirstName} {emp.LastName}' was successfully removed");;
     }
 
     public OpResult<Employee> Edit(Guid Id, Employee emp)
