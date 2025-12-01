@@ -18,10 +18,10 @@ namespace EmployeeAPI.Controllers
         [HttpGet]
         public IActionResult GetEmployees()
         {
-            var empList = _service.Get().ToList();
-            if (empList.Count() == 0)
+            var empList = _service.Get();
+            if (!empList.success)
             {
-                return NoContent();
+                return NotFound(empList);
             }
             return Ok(empList);
         }

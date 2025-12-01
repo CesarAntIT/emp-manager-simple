@@ -2,7 +2,7 @@
 import {ref} from "vue";
 
 const props = defineProps(['employee']);
-const emits = defineEmits(['close']);
+const emits = defineEmits(['close','completed']);
 
 const emp = ref({
     firstName: props.employee.firstName,
@@ -14,20 +14,15 @@ const emp = ref({
     BirhtDate: props.employee.birthDate,
 })
 
-function RemoveEmployee(){
+async function RemoveEmployee(){
 
-    fetch(`http://localhost:5160/api/Employee?Id=${props.employee.id}`, {
+    await fetch(`http://localhost:5160/api/Employee?Id=${props.employee.id}`, {
     method: 'DELETE'
     })
-    .then(res => {
-        if (res.ok){
-            alert("El empleado a sido eliminado satisfactoriamente")
-            emits('close');
-        }
-        else{
-            alert("El empleado a eliminar no se encuentra en la base de datos")
-            emits('close');
-        }
+    .then(res => res.json())
+    .then(data => {
+        emits('completed', data.message, data.success);
+        emits('close');
     })
 }
 
