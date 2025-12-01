@@ -1,10 +1,20 @@
 using System;
 
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace EmployeeAPI.Data.Models;
 
 public class OpResult<T>
 {
-    string message { get; set; }
-    bool success { get; set; }
-    T? Value { get; set; }
+
+    public OpResult( bool suc, T val, string mes){
+        message = mes;
+        Value = val;
+        success = suc;
+    }
+
+    public string message { get; set; }
+    public bool success { get; set; }
+    public T? Value { get; set; }
+
 }
