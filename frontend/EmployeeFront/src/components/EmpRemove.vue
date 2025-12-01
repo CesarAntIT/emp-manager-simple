@@ -14,9 +14,9 @@ const emp = ref({
     BirhtDate: props.employee.birthDate,
 })
 
-function RemoveEmployee(){
+async function RemoveEmployee(){
 
-    fetch(`http://localhost:5160/api/Employee?Id=${props.employee.id}`, {
+    await fetch(`http://localhost:5160/api/Employee?Id=${props.employee.id}`, {
     method: 'DELETE'
     })
     .then(res => res.json())
