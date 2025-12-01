@@ -6,7 +6,7 @@ namespace EmployeeAPI.Services;
 
 public interface IEmployeeService
 {
-    public IEnumerable<Employee> Get();
+    public OpResult<IEnumerable<Employee>> Get();
     public Employee GetById(Guid id);
     public OpResult<Employee> Add(Employee emp);
     public OpResult<Employee> Remove(Guid ID);

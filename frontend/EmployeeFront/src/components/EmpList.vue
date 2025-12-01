@@ -2,62 +2,87 @@
 import {onMounted, ref} from "vue";
 import EmpForm from "./EmpForm.vue";
 import EmpRemove from "./EmpRemove.vue";
+import notificationBox from "./notificationBox.vue";
 
     let arr = ref([]);
     const show_add = ref(false);
     const show_edit = ref(false);
     const remove = ref(false);
+    const show_notif = ref(false);
+
+    const notif_info = ref({
+        message: "",
+        success: false
+    })
+
     const currentEmployee = ref({});
     const currentID = ref("");
     const deps = ref([]);
     const currentDep = ref("");
+
+    const listFind = ref({
+        message: "texxt",
+        success: false
+    });
 
     onMounted(() => {
         GetEmpList();
         getDeps();
     });
 
-    function GetEmpList(){
-        fetch("http://localhost:5160/api/Employee")
-            .then (res => {
-                if (!res.ok){
-                    throw new Error("Could not fetch data")
-                }
-                return res.json();
-            })
+    async function GetEmpList(){
+        await fetch("http://localhost:5160/api/Employee")
+            .then (res => res.json())
             .then(data => {
                 console.log(data);
-                arr.value = data;
+                arr.value = data.value;
             });
+
+        await getDeps();
     }
-    
-    function getDeps(){
-        fetch('http://localhost:5160/api/Employee/deps')
+
+    async function getDeps(){
+       await fetch('http://localhost:5160/api/Employee/deps')
         .then(res => res.json())
         .then(data => deps.value = data);
     }
+
     function SetToDelete(emp){
         remove.value = true;
         currentEmployee.value = emp;
     }
 
-    function filterByDeps(dep){
+    async function filterByDeps(dep){
         if (dep == "all"){
-            GetEmpList()
+            await GetEmpList();
             return;
         }else{
+            await GetEmpList();
             arr.value = arr.value.filter(emp => emp.department == dep);
         }
         
     }
 
+function ShowNotif(message, success){
+    notif_info.value.message = message;
+    notif_info.value.success = success;
+    show_notif.value = true;
+}
+
+function CloseNotif(){
+  show_notif.value = false;
+  notif_info.value.message = "";
+  notif_info.value.success = false;
+}
+
 
 </script>
 
 <template>
-    <div class="card">
+    <div>
         <div style="margin-top: 1rem;">
-            <button class="btn" v-on:click="GetEmpList()">Refresh</button>
+            <button class="btn" v-on:click="GetEmpList();
+                                            ShowNotif('Showing found employees',true)">Refresh</button>
             <button disabled>Search by Department
                 <select v-model="currentDep" v-on:change="filterByDeps(currentDep)">
                 <option value="all">All</option>
@@ -67,12 +92,27 @@ import EmpRemove from "./EmpRemove.vue";
             
         </div>
 
-        <EmpForm  v-if="show_add" v-on:close="show_add=false; GetEmpList()"/>
-        <EmpForm  v-if="show_edit" :id="currentID" :edit="show_edit" v-on:close="show_edit=false; GetEmpList()"/>
-        <EmpRemove v-if="remove" :employee="currentEmployee" v-on:close="remove=false; GetEmpList()"/>
+        <!--Notifications for Testing-->
+        <notificationBox class="notif" v-if="show_notif" v-on:close="CloseNotif()" :message="notif_info.message" :success="notif_info.success"/>
+
+        <!--Edit and Add Form-->
+        <EmpForm  v-if="show_add" 
+                    v-on:close="show_add=false; GetEmpList()" 
+                    v-on:halted="ShowNotif"
+                    v-on:completed=""/>
+
+        <EmpForm  v-if="show_edit" :id="currentID" :edit="show_edit" 
+                  v-on:close="show_edit=false; GetEmpList()"
+                  v-on:halted="ShowNotif"/>
+
+        <!--Remove Form-->
+        <EmpRemove v-if="remove" :employee="currentEmployee" 
+                v-on:close="remove=false; GetEmpList()"
+                v-on:completed="ShowNotif"
+                />
 
         <button class="btn" style="background-color: lightgreen;" v-on:click="show_add = true">Add Employee</button>
-        <table>
+        <table v-if="arr.length > 0">
             <tr>
                 <th>Firstname</th>
                 <th>Lastname</th>
@@ -95,8 +135,10 @@ import EmpRemove from "./EmpRemove.vue";
                 </td>
             </tr>
         </table>
+        <div v-else class="card">
+            <h3>No se encuentran empleados en el sistema</h3>
+        </div>
     </div>
-    
 </template>
 
 <style scoped>
@@ -109,22 +151,18 @@ table{
   padding: 20px;
   margin: 1rem;
 }
-
 tr{
   background-color: grey;
 }
-
 td,th{
   padding:5px;
   border-style: hidden;
   border-radius: 5px;
 }
-
 th{
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
 }
-
 button{
     padding: 0.5rem;
     border-radius: 5px;
@@ -143,6 +181,24 @@ input{
     border-color: gray;
     margin: 5px;
 }
+.card{
+  border-width: 2px;
+  border-style: dashed;
+  background-color: lightgray;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 1rem;
+}
 
+.notif{
+    position: absolute;
+    top: 10%;
+    left: 20rem;
+    z-index: 9;
+    
+}
+div{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
 
 </style>

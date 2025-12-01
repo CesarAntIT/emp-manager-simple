@@ -5,7 +5,7 @@ import {computed, onMounted, ref} from "vue";
         edit: Boolean,
         id: String,
     })
-    const emits = defineEmits(['close']);
+    const emits = defineEmits(['close','completed','halted']);
 
     const Emp = ref({
         ID: '',
@@ -17,9 +17,9 @@ import {computed, onMounted, ref} from "vue";
         Pay: ''
     });
 
-    function getEditEmployee(id, edit){
+    async function getEditEmployee(id, edit){
         if (edit){
-            fetch(`http://localhost:5160/api/Employee/byId?id=${id}`)
+            await fetch(`http://localhost:5160/api/Employee/byId?id=${id}`)
             .then(res => res.json())
             .then(data => {
                 Emp.value.ID = data.id;
@@ -34,28 +34,28 @@ import {computed, onMounted, ref} from "vue";
         return;
     }
 
-    function AddEmployee(){
+    async function AddEmployee(){
         
         Emp.value.ID = "7d1b5e35-4e7a-4fb8-ad99-805898ffe3b5";
 
         if (!Emp.value.firstName||!Emp.value.lastName||!Emp.value.Pay||!Emp.value.BirthDate||!Emp.value.Department)
         {
-            alert("Todos los campos deben estar llenos")
+            emits('halted',"All text fields must be full",false);
             return;
         }
         if (isNaN(Emp.value.Pay)){
-            alert("El campo de Pay solo puede tener valores numericos")
+            emits('halted',"The pay for an employee must be a number",false)
             return;
         }
         if (Emp.value.Pay < 0){
-            alert("El campo Pay no puede ser un numero negativo")
+            emits('halted',"The Pay Amount cannot be below 0",false);
             return;
         }
 
         Emp.value.hireDate = new Date().toISOString();
         const bDate = new Date(Emp.value.BirthDate).toISOString();
 
-        fetch('http://localhost:5160/api/Employee', {
+       await fetch('http://localhost:5160/api/Employee', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -69,31 +69,31 @@ import {computed, onMounted, ref} from "vue";
                 hireDate: Emp.value.hireDate,
                 department: Emp.value.Department
             })
-        }).then(res => {
-            if (!res.ok){
-                alert("Los campos no están correctos y no se realizó la operación, tener en cuenta:\nDepartament solo 2 Letras\nFecha de Nacimiento anterior a 2008\nNo dejar espacios en blanco")
-                return;
+        })
+        .then(res => res.json()) 
+        .then(data => {
 
-            }else{
+            emits('halted',data.message,data.success);
+            if (data.success){
                 emits('close');
             }
         })
         
     }
 
-    function EditEmployee(){
+    async function EditEmployee(){
 
         if (!Emp.value.firstName||!Emp.value.lastName||!Emp.value.Pay||!Emp.value.BirthDate||!Emp.value.Department)
         {
-            alert("Todos los campos deben estar llenos")
+            emits('halted',"Todos los campos deben estar llenos",false)
             return;
         }
         if (isNaN(Emp.value.Pay)){
-            alert("El campo de Pay solo puede tener valores numericos")
+            emits('halted',"The pay for an employee must be a number",false)
             return;
         }
         if (Emp.value.Pay < 0){
-            alert("El campo Pay no puede ser un numero negativo")
+            emits('halted',"The Pay Amount cannot be below 0",false)
             return;
         }
 
@@ -101,7 +101,7 @@ import {computed, onMounted, ref} from "vue";
         const bDate = new Date(Emp.value.BirthDate).toISOString();
         const hDate = new Date(Emp.value.hireDate).toISOString();
 
-        fetch('http://localhost:5160/api/Employee', {
+        await fetch('http://localhost:5160/api/Employee', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -115,15 +115,15 @@ import {computed, onMounted, ref} from "vue";
                 hireDate: hDate,
                 department: Emp.value.Department
             })
-        }).then(res => {
-            if (!res.ok){
-                alert("Los campos no están correctos y no se realizó la operación, tener en cuenta:\nDepartament solo 2 Letras\nFecha de Nacimiento anterior a 2008\nNo dejar espacios en blanco")
-                return;
+        })
+        .then(res => res.json()) 
+        .then(data => {
 
-            }else{
+            emits('halted',data.message,data.success);
+            if (data.success){
                 emits('close');
             }
-        }) 
+        })
     }
 
     getEditEmployee(props.id, props.edit);
@@ -189,6 +189,7 @@ import {computed, onMounted, ref} from "vue";
     padding: 2em;
     border-radius: 1rem;
     width: 50%;
+    min-width: 30rem;
 
     input{
         padding: 10px;
