@@ -3,24 +3,31 @@ using EmployeeAPI.Data;
 using EmployeeAPI.Data.Context;
 using EmployeeAPI.Data.Entities;
 using EmployeeAPI.Data.Models;
+using Microsoft.AspNetCore.SignalR;
 
 namespace EmployeeAPI.Services;
 
 public class EmployeeService:IEmployeeService
 {
     EmployeeDB _context { get; set; }
+    static bool isDbfresh = true;
     public EmployeeService(EmployeeDB db)
     {
         _context = db;
-        SeedData.SetSeedData(_context);
+        if (_context.Employees.Count() <=0 && isDbfresh)
+        {
+            SeedData.SetSeedData(_context);
+            isDbfresh = false;
+        }
     }
-    public IEnumerable<Employee> Get()
+    public OpResult<IEnumerable<Employee>> Get()
     {
+
         var empList = _context.Employees;
         if (empList != null)
-            return empList;
+            return new OpResult<IEnumerable<Employee>>(true,empList,"Mostrando la lista de empleados");
         else
-            return null!;
+            return new OpResult<IEnumerable<Employee>>(false,empList!,"No se encuentran empleados en la lista");;
     }
     
     public Employee GetById(Guid id)
@@ -53,16 +60,16 @@ public class EmployeeService:IEmployeeService
         _context.Employees.Add(emp);
         _context.SaveChanges();
 
-        return emp;
+        return new OpResult<Employee>(true, emp, $"The employee '{emp.FirstName} {emp.LastName}' was successfully added");
     }
     public OpResult<Employee> Remove(Guid ID)
     {
         var emp = GetById(ID);
         if (emp == null)
-            return false;
+            return new OpResult<Employee>(false, null!, "Could not find employee set for removal");
         _context.Employees.Remove(emp);
         _context.SaveChanges();
-        return true;
+        return new OpResult<Employee>(true, emp, $"The employee '{emp.FirstName} {emp.LastName}' was successfully removed");;
     }
 
     public OpResult<Employee> Edit(Guid Id, Employee emp)
