@@ -1,5 +1,6 @@
 
 using EmployeeAPI.Data;
+using EmployeeAPI.Interfaces;
 using EmployeeAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -17,6 +18,7 @@ namespace EmployeeAPI
             builder.Services.AddControllers();
             builder.Services.AddDbContext<EmployeeDB>(opt => opt.UseInMemoryDatabase("EmpDB"));
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+            builder.Services.AddScoped<ILoginService, LoginService>();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
             //Set up CORS

@@ -1,8 +1,11 @@
 <script setup>
 import {onMounted, ref} from "vue";
+import { useRouter } from "vue-router";
 import EmpForm from "./EmpForm.vue";
 import EmpRemove from "./EmpRemove.vue";
 import notificationBox from "./notificationBox.vue";
+
+    const router = useRouter();
 
     let arr = ref([]);
     const show_add = ref(false);
@@ -26,6 +29,7 @@ import notificationBox from "./notificationBox.vue";
     });
 
     onMounted(() => {
+        ConfirmPrivilege();
         GetEmpList();
         getDeps();
     });
@@ -40,18 +44,15 @@ import notificationBox from "./notificationBox.vue";
 
         await getDeps();
     }
-
     async function getDeps(){
        await fetch('http://localhost:5160/api/Employee/deps')
         .then(res => res.json())
         .then(data => deps.value = data);
     }
-
     function SetToDelete(emp){
         remove.value = true;
         currentEmployee.value = emp;
     }
-
     async function filterByDeps(dep){
         if (dep == "all"){
             await GetEmpList();
@@ -61,6 +62,31 @@ import notificationBox from "./notificationBox.vue";
             arr.value = arr.value.filter(emp => emp.department == dep);
         }
         
+    }
+
+    async function ConfirmPrivilege(){
+        const currentUser = JSON.parse(sessionStorage.getItem('User'));
+        console.log(currentUser);
+        if (currentUser == null){
+            router.push('/login');
+            return;
+        }
+
+        await fetch(`http://localhost:5160/confirm-privilage?ID=${currentUser.id}`)
+        .then(res => res.json())
+        .then(data => {
+            ShowNotif(data.message,data.success);
+
+            if (!data.success){
+                setTimeout(() => {
+                    router.push({path:'/login'});    
+                }, 1000);
+            }else{
+                setTimeout(() => {
+                   CloseNotif() 
+                }, 5000);
+            }
+        })
     }
 
 function ShowNotif(message, success){
