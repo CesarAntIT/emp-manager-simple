@@ -31,7 +31,7 @@ public class LoginService : ILoginService
             return new OpResult<User>(false, null!, "User password is incorrect, please try again");
         return new OpResult<User>(true, user, "Succesfully Logged In");
     }
-    public OpResult<User> CheckPrivilage(string id)
+    public OpResult<User> CheckPrivilage(Guid id)
     {
         var user = _context.Users.Find(id);
         if (user == null)
@@ -46,7 +46,7 @@ public class LoginService : ILoginService
             return new OpResult<User>(false, newUser, "Username cannot be a blank input");
         if (newUser.Username != newUser.Username.Replace(" ", ""))
             return new OpResult<User>(false, newUser, "Usernamen cannot have spaces");
-        if (Regex.IsMatch(newUser.Username, @"^[a-zA-Z]+$"))
+        if (!Regex.IsMatch(newUser.Username, @"^[a-zA-Z]+$"))
             return new OpResult<User>(false, newUser, "Usernamen can only be letters");
 
         if (string.IsNullOrWhiteSpace(newUser.Password))

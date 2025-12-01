@@ -7,6 +7,6 @@ namespace EmployeeAPI.Interfaces;
 public interface ILoginService
 {
     public OpResult<User> LogIn(string username, string Password);
-    public OpResult<User> CheckPrivilage(string id);
+    public OpResult<User> CheckPrivilage(Guid id);
     public OpResult<User> Register(User newUser);
 }
