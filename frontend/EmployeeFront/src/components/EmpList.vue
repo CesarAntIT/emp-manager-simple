@@ -31,22 +31,27 @@ import notificationBox from "./notificationBox.vue";
     });
 
     async function GetEmpList(){
-       await fetch("http://localhost:5160/api/Employee")
+        await fetch("http://localhost:5160/api/Employee")
             .then (res => res.json())
             .then(data => {
                 console.log(data);
                 arr.value = data.value;
             });
+
+        await getDeps();
     }
-    function getDeps(){
-        fetch('http://localhost:5160/api/Employee/deps')
+
+    async function getDeps(){
+       await fetch('http://localhost:5160/api/Employee/deps')
         .then(res => res.json())
         .then(data => deps.value = data);
     }
+
     function SetToDelete(emp){
         remove.value = true;
         currentEmployee.value = emp;
     }
+
     async function filterByDeps(dep){
         if (dep == "all"){
             await GetEmpList();
@@ -189,6 +194,7 @@ input{
     position: absolute;
     top: 10%;
     left: 20rem;
+    z-index: 9;
     
 }
 div{
