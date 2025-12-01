@@ -2,6 +2,7 @@ using System;
 using EmployeeAPI.Data;
 using EmployeeAPI.Data.Context;
 using EmployeeAPI.Data.Entities;
+using EmployeeAPI.Data.Models;
 
 namespace EmployeeAPI.Services;
 
@@ -30,19 +31,19 @@ public class EmployeeService:IEmployeeService
         return emp;
     }
 
-    public Employee Add(Employee emp)
+    public OpResult<Employee> Add(Employee emp)
     {
         if (emp == null)
             return null!;
 
         if (string.IsNullOrWhiteSpace(emp.FirstName))
-            return null!;
+            return new OpResult<Employee>(false, null!, "Firstname input cannot be empty");
         if (string.IsNullOrWhiteSpace(emp.LastName))
-            return null!;
+            return new OpResult<Employee>(false, null!, "Lastname input cannot be empty");
         if (DateTime.Compare(emp.BirthDate, new DateTime(2008, 1, 1)) > 0)
-            return null!;
+            return new OpResult<Employee>(false, null!, "Date of birth cannot be before 2008");
         if (emp.Department!.Length > 2 || string.IsNullOrWhiteSpace(emp.Department))
-            return null!;
+            return new OpResult<Employee>(false, null!, "Invalid Input for Department.\nMust be 2 character input");
         if (emp.Pay < 0)
             return null!;
 
@@ -52,38 +53,38 @@ public class EmployeeService:IEmployeeService
         _context.Employees.Add(emp);
         _context.SaveChanges();
 
-        return emp;
+        return new OpResult<Employee>(true, emp, $"The employee '{emp.FirstName} {emp.LastName}' was successfully added");
     }
-    public bool Remove(Guid ID)
+    public OpResult<Employee> Remove(Guid ID)
     {
         var emp = GetById(ID);
         if (emp == null)
-            return false;
+            return new OpResult<Employee>(false, null!, "Could not find employee set for removal");
         _context.Employees.Remove(emp);
         _context.SaveChanges();
-        return true;
+        return new OpResult<Employee>(true, emp, $"The employee '{emp.FirstName} {emp.LastName}' was successfully removed");;
     }
 
-    public Employee Edit(Guid Id, Employee emp)
+    public OpResult<Employee> Edit(Guid Id, Employee emp)
     {
         if (emp == null)
             return null!;
 
         var UpdEmp = GetById(Id);
         if (UpdEmp == null)
-            return UpdEmp!;
+            return new OpResult<Employee>(false, null!, "Could not find employee in system");
         if (string.IsNullOrWhiteSpace(emp.FirstName))
-            return null!;
+            return new OpResult<Employee>(false, null!, "Firstname input cannot be empty");
         if (string.IsNullOrWhiteSpace(emp.LastName))
-            return null!;
+            return new OpResult<Employee>(false, null!, "Lastname input cannot be empty");
         if (DateTime.Compare(emp.BirthDate, new DateTime(2008, 1, 1)) > 0)
-            return null!;
+            return new OpResult<Employee>(false, null!, "Date of birth cannot be before 2008");
         if (emp.Department!.Length > 2 || string.IsNullOrWhiteSpace(emp.Department))
-            return null!;
+            return new OpResult<Employee>(false, null!, "Invalid Input for Department.\nMust be 2 character input");
         if (DateTime.Compare(emp.HireDate, DateTime.Now) > 0)
-            return null!;
+            return new OpResult<Employee>(false, null!, "Hire date of employee cannot be set in a future date");
         if (emp.Pay < 0)
-            return null!;
+            return new OpResult<Employee>(false, null!, "The salary of an employee cannot be below $0");
 
         UpdEmp.LastName = emp.LastName;
         UpdEmp.FirstName = emp.FirstName;
@@ -94,7 +95,8 @@ public class EmployeeService:IEmployeeService
 
         _context.Update(UpdEmp);
         _context.SaveChanges();
-        return UpdEmp;
+        return new OpResult<Employee>(true, UpdEmp, $"The employee '{UpdEmp.FirstName} {UpdEmp.LastName}' was successfully updated");
+
     }
     
     public List<string> GetDepartments()
