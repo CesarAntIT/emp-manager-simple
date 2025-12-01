@@ -1,15 +1,18 @@
 <script setup>
 import EmpList from './components/EmpList.vue';
 import Topbar from './components/Topbar.vue';
+import LogIn from './components/LogIn.vue';
 </script>
 
 <template>
-  <Topbar/>
-  <EmpList/>
+  <div>
+    <Topbar/>
+      <RouterView></RouterView>
+  </div>
 </template>
 
 <style scoped>
-body{
-  background-color: white;
+div{
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 </style>
