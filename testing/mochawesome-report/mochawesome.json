@@ -1,0 +1,240 @@
+{
+  "stats": {
+    "suites": 4,
+    "tests": 5,
+    "passes": 4,
+    "pending": 0,
+    "failures": 1,
+    "start": "2025-12-02T02:05:36.739Z",
+    "end": "2025-12-02T02:05:59.308Z",
+    "duration": 22569,
+    "testsRegistered": 5,
+    "passPercent": 80,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "a50a93a1-e35f-4875-9f07-6c5ff588a758",
+      "title": "",
+      "fullFile": "",
+      "file": "",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "259b049b-e481-4972-8b67-8219b731d9c3",
+          "title": "Log In Tests",
+          "fullFile": "C:\\Users\\cesar\\Desktop\\Coding Projects\\School Work\\FullStack\\emp-simple-manager-tests\\testing\\test\\loginTest.js",
+          "file": "\\test\\loginTest.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Should stay in the same page if log-in blank",
+              "fullTitle": "Log In Tests Should stay in the same page if log-in blank",
+              "timedOut": false,
+              "duration": 5338,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "let driver = await new Builder().forBrowser('firefox').build();\nawait driver.get(\"http://localhost:5173/login\")\nlet logInButton = await driver.findElement(By.xpath(\"/html/body/div/div/div[2]/div/button[1]\"))\nlogInButton.click();\n\nlet currentURL = await driver.getCurrentUrl()\ncurrentURL.should.equal(\"http://localhost:5173/login\")\nawait driver.quit();",
+              "err": {},
+              "uuid": "fbb1e40f-3283-4aac-a6b0-b304a9b4674d",
+              "parentUUID": "259b049b-e481-4972-8b67-8219b731d9c3",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Should move to next page if sign in is correct",
+              "fullTitle": "Log In Tests Should move to next page if sign in is correct",
+              "timedOut": false,
+              "duration": 2444,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "let driver = await new Builder().forBrowser('firefox').build();\nautoLogin(driver)\ndriver.quit();",
+              "err": {},
+              "uuid": "79472f3e-b9d9-41c3-82da-5e5ffcdcb4d9",
+              "parentUUID": "259b049b-e481-4972-8b67-8219b731d9c3",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "fbb1e40f-3283-4aac-a6b0-b304a9b4674d",
+            "79472f3e-b9d9-41c3-82da-5e5ffcdcb4d9"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 7782,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 0
+        },
+        {
+          "uuid": "8b1eda6c-245e-4dd1-a9cc-2125ffe9c09a",
+          "title": "View Items Tests",
+          "fullFile": "C:\\Users\\cesar\\Desktop\\Coding Projects\\School Work\\FullStack\\emp-simple-manager-tests\\testing\\test\\loginTest.js",
+          "file": "\\test\\loginTest.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Should move to redirect to login when not logged in",
+              "fullTitle": "View Items Tests Should move to redirect to login when not logged in",
+              "timedOut": false,
+              "duration": 4972,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "let driver = await new Builder().forBrowser('firefox').build();\nawait driver.get(\"http://localhost:5173/\");\nawait driver.manage().setTimeouts({implicit: 500});\nlet currentURL = await driver.getCurrentUrl()\ncurrentURL.should.equal(\"http://localhost:5173/login\")",
+              "err": {},
+              "uuid": "f99f7d51-1cb5-4404-8acd-36dab5a3bc20",
+              "parentUUID": "8b1eda6c-245e-4dd1-a9cc-2125ffe9c09a",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "f99f7d51-1cb5-4404-8acd-36dab5a3bc20"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 4972,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 0
+        },
+        {
+          "uuid": "1b3022ff-3e7a-4a3f-84e7-fcb30bc109d6",
+          "title": "Add Item Test",
+          "fullFile": "C:\\Users\\cesar\\Desktop\\Coding Projects\\School Work\\FullStack\\emp-simple-manager-tests\\testing\\test\\loginTest.js",
+          "file": "\\test\\loginTest.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Should through an error if field is empty",
+              "fullTitle": "Add Item Test Should through an error if field is empty",
+              "timedOut": false,
+              "duration": 4829,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "let driver = await new Builder().forBrowser('firefox').build();\nawait autoLogin(driver);\nawait driver.findElement(By.xpath(\"/html/body/div/div/div[2]/button\")).click();\nawait driver.manage().setTimeouts({implicit: 1000});\nlet message = await driver.findElement(By.css(\"html body div#app div div div.main-card div div button\")).getText();\nmessage.should.equal(message,\"All text fields must be full\")\ndriver.quit();",
+              "err": {},
+              "uuid": "2ca25340-d15b-40a3-a398-5db0780a162b",
+              "parentUUID": "1b3022ff-3e7a-4a3f-84e7-fcb30bc109d6",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "2ca25340-d15b-40a3-a398-5db0780a162b"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 4829,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 0
+        },
+        {
+          "uuid": "33249c60-89f6-4f3c-9818-6e05e5753956",
+          "title": "Edit Employee Test",
+          "fullFile": "C:\\Users\\cesar\\Desktop\\Coding Projects\\School Work\\FullStack\\emp-simple-manager-tests\\testing\\test\\loginTest.js",
+          "file": "\\test\\loginTest.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Should be successful if all only one field is changed",
+              "fullTitle": "Edit Employee Test Should be successful if all only one field is changed",
+              "timedOut": false,
+              "duration": 4976,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "let driver = await new Builder().forBrowser('firefox').build();\nawait autoLogin(driver);\nawait driver.manage().setTimeouts({implicit: 500});\nawait driver.findElement(By.xpath(\"html body div#app div div table tr td button.btn\")).click();\nawait driver.manage().setTimeouts({implicit: 1000});\nlet message = await driver.findElement(By.css(\"html body div#app div div div.notif-good.notif p b\")).getText();\nmessage.should.equal(message,\"The employee 'César Aybar' was successfully updated?\")\ndriver.quit();",
+              "err": {
+                "message": "InvalidSelectorError: Given xpath expression \"html body div#app div div table tr td button.btn\" is invalid: SyntaxError: Document.evaluate: The expression is not a legal expression",
+                "estack": "InvalidSelectorError: Given xpath expression \"html body div#app div div table tr td button.btn\" is invalid: SyntaxError: Document.evaluate: The expression is not a legal expression\n    at Object.throwDecodedError (node_modules\\selenium-webdriver\\lib\\error.js:523:15)\n    at parseHttpResponse (node_modules\\selenium-webdriver\\lib\\http.js:524:13)\n    at Executor.execute (node_modules\\selenium-webdriver\\lib\\http.js:456:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Driver.execute (node_modules\\selenium-webdriver\\lib\\webdriver.js:745:17)\n    at async toWireValue (node_modules\\selenium-webdriver\\lib\\webdriver.js:149:15)\n    at async C:\\Users\\cesar\\Desktop\\Coding Projects\\School Work\\FullStack\\emp-simple-manager-tests\\testing\\node_modules\\selenium-webdriver\\lib\\webdriver.js:195:16\n    at async forEachKey (node_modules\\selenium-webdriver\\lib\\webdriver.js:189:9)\n    at async convertKeys (node_modules\\selenium-webdriver\\lib\\webdriver.js:194:3)\n    at async Driver.execute (node_modules\\selenium-webdriver\\lib\\webdriver.js:743:22)\n    at async Context.<anonymous> (test\\loginTest.js:78:9)",
+                "diff": null
+              },
+              "uuid": "0ef82456-f4e9-49fc-a28e-a618ae56be90",
+              "parentUUID": "33249c60-89f6-4f3c-9818-6e05e5753956",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "0ef82456-f4e9-49fc-a28e-a618ae56be90"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 4976,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 0
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 0
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "11.7.5"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": null,
+      "version": "6.3.2"
+    }
+  }
+}

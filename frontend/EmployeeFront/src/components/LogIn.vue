@@ -37,7 +37,7 @@ async function LogIn(){
         ShowNotif("Username cannot be empty value",false);
         setTimeout(() => {
             CloseNotif();
-            }, 2000);  
+            }, 10000);  
         return;
     }
 
@@ -45,7 +45,7 @@ async function LogIn(){
         ShowNotif("Password cannot be empty value",false);
         setTimeout(() => {
             CloseNotif();
-            }, 2000);  
+            }, 10000);  
         return;
     }
     
@@ -56,13 +56,11 @@ async function LogIn(){
 
             if (data.success){
                 sessionStorage.setItem('User',JSON.stringify(data.value))                
-                setTimeout(() => {
-                    router.push({path: '/'});       
-                }, 3000);    
+                router.push({path: '/'});           
             }else{
                 setTimeout(() => {
                 CloseNotif();
-                }, 2000);   
+                }, 10000);   
             }
         })
 }
