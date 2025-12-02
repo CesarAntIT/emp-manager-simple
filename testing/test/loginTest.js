@@ -73,9 +73,12 @@ describe("Edit Employee Test", async () => {
     it("Should be successful if all only one field is changed", async () => {
         let driver = await new Builder().forBrowser('firefox').build();
         await autoLogin(driver);
-        await driver.manage().setTimeouts({implicit: 500});
+        await driver.manage().setTimeouts({implicit: 1000});
 
-        await driver.findElement(By.css("html body div#app div div table tr td button.btn")).click();
+        await driver.findElement(By.xpath("/html/body/div/div/div[2]/table/tr[2]/td[6]/button[1]")).click();
+        await driver.manage().setTimeouts({implicit: 1000});
+
+        await driver.findElement(By.xpath("html body div#app div div div.main-card div div div input")).sendKeys("Pinto");
         await driver.manage().setTimeouts({implicit: 1000});
 
         let message = await driver.findElement(By.css("html body div#app div div div.notif-good.notif p b")).getText();
