@@ -1,0 +1,17 @@
+{
+  "name": "simple-manager-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --no-timeouts reporter mochawesome"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "chai": "^6.2.1",
+    "mocha": "^11.7.5",
+    "mochawesome": "^7.1.4",
+    "selenium-webdriver": "^4.38.0"
+  }
+}
