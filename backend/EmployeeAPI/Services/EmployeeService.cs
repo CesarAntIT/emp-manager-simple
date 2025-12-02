@@ -10,16 +10,11 @@ namespace EmployeeAPI.Services;
 public class EmployeeService:IEmployeeService
 {
     EmployeeDB _context { get; set; }
-    static bool isDbfresh = true;
     public EmployeeService(EmployeeDB db)
     {
         _context = db;
-        if (_context.Employees.Count() <=0 && isDbfresh)
-        {
-            SeedData.SetSeedData(_context);
-            isDbfresh = false;
-        }
     }
+
     public OpResult<IEnumerable<Employee>> Get()
     {
 

@@ -33,7 +33,14 @@ public class SeedData
                 Pay = 450m,
                 ID = Guid.NewGuid(),
             });
-
+            _context.Users.Add(new User()
+            {
+                Username = "Admin",
+                Password = "12345",
+                ID = Guid.Parse("858e72b5-da80-45ee-9e6e-e9f980337b02"),
+                Role = "Admin"
+            });
+            
             _context.SaveChanges();
         }
     }
